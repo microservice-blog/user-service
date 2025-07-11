@@ -9,6 +9,7 @@ pipeline {
   environment {
     IMAGE_NAME = "thuctd281/user-service"
     ENV_FILE = "/root/env-app/.env"
+    NODE_ENV = 'prod'
   }
 
   stages {
@@ -68,8 +69,9 @@ pipeline {
       steps {
         withCredentials([file(credentialsId: 'FILE_ENV', variable: 'ENV_FILE')]) {
           sh '''
-            cp "$ENV_FILE" .env
-            cat .env
+            mkdir -p env
+            cp "$ENV_FILE" env/.env.prod
+            cat env/.env.prod
             export SERVICE_IMAGE=$IMAGE_TAG
             docker-compose pull
             docker-compose down
